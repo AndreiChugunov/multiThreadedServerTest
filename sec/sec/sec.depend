@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1506697635 source:c:\users\809279\desktop\sec\sec\main.cpp
+	<iostream>
+	<windows.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdlib.h>
+	<stdio.h>
+	<process.h>
+	<vector>
+
