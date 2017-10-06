@@ -36,7 +36,7 @@ int readn(int newsockfd, char *buffer, int n) {
         return n - nLeft;
 }
 unsigned int __stdcall readFunc(void* pArguments) {
-        SOCKET ClientSocket = INVALID_SOCKET;
+//        SOCKET ClientSocket = INVALID_SOCKET;
         SOCKET ConnectSocket = *(SOCKET*) pArguments;
         int iResult;
         do {
@@ -47,14 +47,19 @@ unsigned int __stdcall readFunc(void* pArguments) {
                 printf("Bytes received: %d\n", iResult);
                 printf("Received data: %s\n", recvbuf);
             }
-            else if ( iResult == 0 )
+            else if ( iResult == 0 ) {
                 printf("Connection closed\n");
-            else
+                break;
+            }
+            else {
                 printf("recv failed with error: %d\n", WSAGetLastError());
+                break;
+            }
 
         } while( iResult > 0 );
-
-
+        printf("ya upal bl9\n");
+        shutdown(ConnectSocket, 2);
+        closesocket(ConnectSocket);
         return 0;
 }
 int __cdecl main(int argc, char **argv)
@@ -145,10 +150,14 @@ int __cdecl main(int argc, char **argv)
     unsigned acceptThreadId;
     HANDLE acceptThreadHandler = (HANDLE)_beginthreadex(NULL, 0, &readFunc, (void*) nListenSocket, 0, &acceptThreadId);
     while(true) {
+
         char buff[512];
         scanf("%s", buff);
         printf("%s\n", buff);
-        send( ConnectSocket, buff, recvbuflen, 0 );
+
+        int Result = send( ConnectSocket, buff, recvbuflen, 0 );
+        if (Result == SOCKET_ERROR)
+            break;
         if (buff == endString) {
             break;
         }

@@ -67,6 +67,11 @@ unsigned int __stdcall threadedFunction(void* pArguments) {
             ZeroMemory(p, recvbuflen);
 
             readed = readn(ClientSocket, p, recvbuflen);
+            if (readed == -1) {
+                shutdown(ClientSocket, 2);
+                closesocket(ClientSocket);
+                break;
+            }
             printf("Bytes read: %d\n", readed);
             printf("Received data: %s\n", recvbuf);
             if (recvbuf == endString) {
